@@ -46,12 +46,18 @@
                   <p>ID: DRV-001</p>
                 </div>
               </div>
-              <div class="user-dropdown-divider"></div>
-              <a href="#profile" class="user-dropdown-item"><i class="fas fa-id-card"></i> Driver Information</a>
-              <a href="#license" class="user-dropdown-item"><i class="fas fa-drivers-license"></i> License Details</a>
-              <a href="#settings" class="user-dropdown-item"><i class="fas fa-cog"></i> Settings</a>
-              <div class="user-dropdown-divider"></div>
-              <a href="login.html" class="user-dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+              <div class="user-dropdown-row">
+                <div class="user-dropdown-divider"></div>
+                <a href="#profile" class="user-dropdown-item"><i class="fas fa-id-card"></i> Driver Information</a>
+                <a href="#license" class="user-dropdown-item"><i class="fas fa-drivers-license"></i> License Details</a>
+                <a href="#settings" class="user-dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+                <div class="user-dropdown-divider"></div>
+              </div>              
+              
+              <a href="login.html" class="user-dropdown-item" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+              
             </div>
           </div>
         </div>
@@ -120,99 +126,108 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const isLoggedIn = localStorage.getItem('isLoggedIn');
-      const userRole = localStorage.getItem('userRole');
+  // Check if driver is logged in
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  const userRole = localStorage.getItem('userRole');
 
-      if (!isLoggedIn || userRole !== 'driver') {
-        window.location.href = 'login.html';
-        return;
-      }
+  if (!isLoggedIn || userRole !== 'driver') {
+    window.location.href = 'login.html';
+    return;
+  }
 
-      const username = localStorage.getItem('username');
-      document.querySelector('.user-profile span').textContent = username || 'Driver';
-      document.querySelector('.user-details h4').textContent = username || 'Driver';
+  // Set username on profile section
+  const username = localStorage.getItem('username');
+  document.querySelector('.user-profile span').textContent = username || 'Driver';
+  document.querySelector('.user-details h4').textContent = username || 'Driver';
 
-      const userProfile = document.querySelector('.user-profile');
-      const userDropdown = document.getElementById('userDropdown');
+  // Toggle dropdown menu
+  const userProfile = document.querySelector('.user-profile');
+  const userDropdown = document.getElementById('userDropdown');
 
-      userProfile.addEventListener('click', function (e) {
-        e.stopPropagation();
-        userDropdown.classList.toggle('show');
-      });
+  userProfile.addEventListener('click', function (e) {
+    e.stopPropagation();
+    userDropdown.classList.toggle('show');
+  });
 
-      document.addEventListener('click', function () {
-        userDropdown.classList.remove('show');
-      });
+  document.addEventListener('click', function () {
+    userDropdown.classList.remove('show');
+  });
 
-      const navLinks = document.querySelectorAll('.nav-links li');
-      navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          navLinks.forEach(l => l.classList.remove('active'));
-          link.classList.add('active');
-        });
-      });
-
-      document.getElementById('logoutBtn').addEventListener('click', function (e) {
-        e.preventDefault();
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('username');
-        localStorage.removeItem('userRole');
-        window.location.href = 'login.html';
-      });
-
-      // Initialize Charts
-      const tripStatsCtx = document.getElementById('tripStatsChart').getContext('2d');
-      const vehiclePerformanceCtx = document.getElementById('vehiclePerformanceChart').getContext('2d');
-
-      // Monthly Trip Statistics Chart
-      new Chart(tripStatsCtx, {
-        type: 'bar',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          datasets: [{
-            label: 'Completed Trips',
-            data: [12, 19, 15, 17, 20, 18],
-            backgroundColor: 'rgba(0, 51, 102, 0.7)',
-            borderColor: 'rgba(0, 51, 102, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
-
-      // Vehicle Performance Chart
-      new Chart(vehiclePerformanceCtx, {
-        type: 'line',
-        data: {
-          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-          datasets: [{
-            label: 'Fuel Efficiency (km/L)',
-            data: [12, 11.5, 12.2, 11.8],
-            backgroundColor: 'rgba(196, 30, 58, 0.2)',
-            borderColor: 'rgba(196, 30, 58, 1)',
-            borderWidth: 2,
-            tension: 0.4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: false
-            }
-          }
-        }
-      });
+  // Navigation active class toggle
+  const navLinks = document.querySelectorAll('.nav-links li');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
     });
+  });
+
+  // ✅ LOGOUT FUNCTIONALITY
+  document.getElementById('logoutBtn').addEventListener('click', function (e) {
+    e.preventDefault();
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userRole');
+    window.location.href = 'login.html';
+  });
+
+  // ========================
+  // Charts Initialization
+  // ========================
+
+  const tripStatsCtx = document.getElementById('tripStatsChart').getContext('2d');
+  const vehiclePerformanceCtx = document.getElementById('vehiclePerformanceChart').getContext('2d');
+
+  // Monthly Trip Statistics Chart
+  new Chart(tripStatsCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      datasets: [{
+        label: 'Completed Trips',
+        data: [12, 19, 15, 17, 20, 18],
+        backgroundColor: 'rgba(0, 51, 102, 0.7)',
+        borderColor: 'rgba(0, 51, 102, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  // Vehicle Performance Chart
+  new Chart(vehiclePerformanceCtx, {
+    type: 'line',
+    data: {
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      datasets: [{
+        label: 'Fuel Efficiency (km/L)',
+        data: [12, 11.5, 12.2, 11.8],
+        backgroundColor: 'rgba(196, 30, 58, 0.2)',
+        borderColor: 'rgba(196, 30, 58, 1)',
+        borderWidth: 2,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: false
+        }
+      }
+    }
+  });
+});
+
   </script>
 </body>
 </html>

@@ -1327,6 +1327,7 @@ small {
 .user-dropdown-item {
     padding: 10px 20px;
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 10px;
     color: var(--ur-dark-gray);
@@ -1409,3 +1410,34 @@ small {
     margin-bottom: 2rem;
     flex-grow: 1;
 }
+
+.user-dropdown-links-row {
+    display: flex;
+    justify-content: space-between; /* Distribute items with equal space between them */
+    align-items: center; /* Center items vertically */
+    padding: 0.5rem 1rem; /* Add padding around the row */
+}
+
+.user-dropdown-item {
+    color: var(--ur-dark-gray);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+    margin: 0 15px; /* Add margin between each link */
+}
+
+.user-dropdown-item:hover {
+    color: #c41e3a;
+    text-decoration: underline;
+}
+
+.user-dropdown-divider {
+    height: 1px;
+    background-color: #ccc;
+    width: 20px; /* Set a width for the divider */
+    margin: 0 10px; /* Space between divider and the items */
+}
+
+
+
