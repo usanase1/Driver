@@ -129,7 +129,12 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+   document.addEventListener('DOMContentLoaded', function () {
+  // ============================
+  // 🚫 LOGIN CHECK DISABLED
+  // ============================
+
+  /*
   // Check if driver is logged in
   const isLoggedIn = localStorage.getItem('isLoggedIn');
   const userRole = localStorage.getItem('userRole');
@@ -138,8 +143,13 @@
     window.location.href = 'login.html';
     return;
   }
+  */
 
-  // Set username on profile section
+  // Set username on profile section (fallback to 'Driver')
+  // You can keep this or set a static name like below:
+  // document.querySelector('.user-profile span').textContent = 'Driver';
+  // document.querySelector('.user-details h4').textContent = 'Driver';
+
   const username = localStorage.getItem('username');
   document.querySelector('.user-profile span').textContent = username || 'Driver';
   document.querySelector('.user-details h4').textContent = username || 'Driver';
@@ -165,14 +175,19 @@
       link.classList.add('active');
     });
   });
-  document.addEventListener('DOMContentLoaded', function () {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const userRole = localStorage.getItem('userRole');
 
-        if (isLoggedIn !== 'true' || !userRole) {
-            window.location.href = 'login.html';
-        }
-    });
+  /*
+  // 🚫 Duplicate login check also disabled
+  document.addEventListener('DOMContentLoaded', function () {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userRole = localStorage.getItem('userRole');
+
+    if (isLoggedIn !== 'true' || !userRole) {
+        window.location.href = 'login.html';
+    }
+  });
+  */
+
   // ✅ LOGOUT FUNCTIONALITY
   document.getElementById('logoutBtn').addEventListener('click', function (e) {
     e.preventDefault();
