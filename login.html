@@ -92,15 +92,15 @@
       `;
       document.head.appendChild(style);
     }
-
+  
     function showLoading() {
       document.querySelector(".loading").classList.add("active");
     }
-
+  
     function hideLoading() {
       document.querySelector(".loading").classList.remove("active");
     }
-
+  
     const dashboardCache = {};
     const dashboardsToPreload = [
       { file: "admin-dashboard.html", css: "admin-dashboard.css" },
@@ -109,7 +109,7 @@
       { file: "system-admin-dashboard.html", css: "styles.css" },
       { file: "hr-dashboard.html", css: "hr-dashboard.css" },
     ];
-
+  
     Promise.all(
       dashboardsToPreload.map(async d => {
         try {
@@ -121,87 +121,79 @@
         }
       })
     );
-
+  
     document.querySelector(".toggle-password").addEventListener("click", function () {
       const password = document.querySelector("#password");
       password.type = password.type === "password" ? "text" : "password";
       this.classList.toggle("fa-eye");
       this.classList.toggle("fa-eye-slash");
     });
-
+  
     document.getElementById("loginForm").addEventListener("submit", async function (e) {
-  e.preventDefault();
-  showLoading();
-
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const rememberMe = document.getElementById("remember").checked;
-
-  const userCredentials = {
-    "superAdmin": { password: "superAdmin123", role: "system_admin", name: "System Administrator", dashboard: "system-admin-dashboard.html" },
-    "staff": { password: "staff123", role: "staff", name: "Staff Member", dashboard: "staff-dashboard.html" },
-    "driver": { password: "driver123", role: "driver", name: "Driver", dashboard: "driver-dashboard.html" },
-    "staffAdmin": { password: "hr123", role: "hr", name: "HR", dashboard: "hr-dashboard.html" },
-    "admin": { password: "admin123", role: "admin", name: "Administrator", dashboard: "admin-dashboard.html" }
-  };
-
-  const user = userCredentials[username];
-
-  if (user && user.password === password) {
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("username", user.name);
-    localStorage.setItem("userRole", user.role);
-    localStorage.setItem("lastLogin", new Date().toISOString());
-
-    if (rememberMe) {
-      localStorage.setItem("rememberedUsername", username);
-    } else {
-      localStorage.removeItem("rememberedUsername");
-    }
-
-    console.log("Login successful! Redirecting to:", user.dashboard);
-    window.location.href = user.dashboard;
-  } else {
-    hideLoading();
-    const existingError = document.querySelector(".error-message");
-    if (existingError) existingError.remove();
-
-    const error = document.createElement("div");
-    error.className = "error-message";
-    error.innerHTML = `<i class="fas fa-exclamation-circle"></i> Invalid username or password.`;
-    document.querySelector(".login-form").insertBefore(error, document.querySelector(".form-options"));
-    setTimeout(() => error.remove(), 3000);
-  }
-});
-
-    // Auto-fill remembered username
+      e.preventDefault();
+      showLoading();
+  
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const rememberMe = document.getElementById("remember").checked;
+  
+      const userCredentials = {
+        "superAdmin": { password: "superAdmin123", role: "system_admin", name: "System Administrator", dashboard: "system-admin-dashboard.html" },
+        "staff": { password: "staff123", role: "staff", name: "Staff Member", dashboard: "staff-dashboard.html" },
+        "driver": { password: "driver123", role: "driver", name: "Driver", dashboard: "driver-dashboard.html" },
+        "staffAdmin": { password: "hr123", role: "hr", name: "HR", dashboard: "hr-dashboard.html" },
+        "admin": { password: "admin123", role: "admin", name: "Administrator", dashboard: "admin-dashboard.html" }
+      };
+  
+      const user = userCredentials[username];
+  
+      if (user && user.password === password) {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("username", user.name);
+        localStorage.setItem("userRole", user.role);
+        localStorage.setItem("lastLogin", new Date().toISOString());
+  
+        if (rememberMe) {
+          localStorage.setItem("rememberedUsername", username);
+        } else {
+          localStorage.removeItem("rememberedUsername");
+        }
+  
+        console.log("Login successful! Redirecting to:", user.dashboard);
+        window.location.href = user.dashboard;
+      } else {
+        hideLoading();
+        const existingError = document.querySelector(".error-message");
+        if (existingError) existingError.remove();
+  
+        const error = document.createElement("div");
+        error.className = "error-message";
+        error.innerHTML = `<i class="fas fa-exclamation-circle"></i> Invalid username or password.`;
+        document.querySelector(".login-form").insertBefore(error, document.querySelector(".form-options"));
+        setTimeout(() => error.remove(), 3000);
+      }
+    });
+  
+    // ✅ Fill remembered username if available
     document.addEventListener("DOMContentLoaded", () => {
       const remembered = localStorage.getItem("rememberedUsername");
       if (remembered) {
         document.getElementById("username").value = remembered;
         document.getElementById("remember").checked = true;
       }
-
-      const isLoggedIn = localStorage.getItem("isLoggedIn");
-      const userRole = localStorage.getItem("userRole");
+  
+      // 🔁 Keep logout detection for cleaning up
       const isFromLogout = sessionStorage.getItem("fromLogout") === "true";
-
-      const dashboards = {
-        "system_admin": "system-admin-dashboard.html",
-        "staff": "staff-dashboard.html",
-        "driver": "driver-dashboard.html",
-        "admin": "admin-dashboard.html",
-        "hr": "hr-dashboard.html"
-      };
-
-      if (!isFromLogout && isLoggedIn === "true" && userRole && dashboards[userRole]) {
-        window.location.href = dashboards[userRole];
+      if (isFromLogout) {
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("lastLogin");
       }
-
+  
       sessionStorage.removeItem("fromLogout");
     });
-
-    // Handle browser back to login
+  
+    // Clean up if user presses browser back to login page
     window.addEventListener("popstate", () => {
       const path = window.location.pathname;
       if (path.endsWith("login.html")) {
@@ -211,5 +203,6 @@
       }
     });
   </script>
+  
 </body>
 </html>
