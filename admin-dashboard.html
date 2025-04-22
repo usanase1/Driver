@@ -393,6 +393,14 @@
                 window.location.href = 'login.html';
             });
         });
+        document.addEventListener('DOMContentLoaded', function () {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userRole = localStorage.getItem('userRole');
+
+        if (isLoggedIn !== 'true' || !userRole) {
+            window.location.href = 'login.html';
+        }
+    });
     </script>
 </body>
 </html> 
